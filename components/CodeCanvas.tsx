@@ -24,6 +24,50 @@ export default function CodeCanvas({ file, index }: CodeCanvasProps) {
     year: 'numeric',
   });
 
+  // Add syntax highlighting for Java code
+  const highlightJava = (line: string) => {
+    // Java keywords
+    const keywords = /\b(public|private|protected|static|final|class|interface|extends|implements|void|int|double|float|long|short|byte|char|boolean|String|if|else|while|for|return|new|this|super|try|catch|finally|throw|throws|import|package)\b/g;
+
+    // Function calls (word followed by parenthesis)
+    const functions = /\b([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/g;
+
+    // Annotations
+    const annotations = /(@[a-zA-Z]+)/g;
+
+    // Strings
+    const strings = /(["'])(.*?)\1/g;
+
+    // Comments
+    const comments = /(\/\/.*$|\/\*[\s\S]*?\*\/)/g;
+
+    // Numbers
+    const numbers = /\b(\d+\.?\d*)\b/g;
+
+    // Apply highlighting
+    let highlighted = line;
+
+    // Comments first (highest priority)
+    highlighted = highlighted.replace(comments, '<span class="syntax-comment">$1</span>');
+
+    // Strings
+    highlighted = highlighted.replace(strings, '<span class="syntax-string">$1$2$1</span>');
+
+    // Keywords
+    highlighted = highlighted.replace(keywords, '<span class="syntax-keyword">$1</span>');
+
+    // Annotations
+    highlighted = highlighted.replace(annotations, '<span class="syntax-annotation">$1</span>');
+
+    // Functions
+    highlighted = highlighted.replace(functions, '<span class="syntax-function">$1</span>(');
+
+    // Numbers
+    highlighted = highlighted.replace(numbers, '<span class="syntax-number">$1</span>');
+
+    return highlighted;
+  };
+
   // Add line numbers to code
   const codeLines = file.content.split('\n');
 
@@ -74,33 +118,17 @@ export default function CodeCanvas({ file, index }: CodeCanvasProps) {
         )}
       </div>
 
-      {/* Code Display */}
-      <div className="code-container">
-        <pre className="code-pre">
+      {/* Code Display with White Background */}
+      <div className="code-container code-container-white">
+        <pre className="code-pre code-pre-white">
           <code className="code-block">
             {codeLines.map((line, idx) => (
-              <div key={idx} className="code-line">
-                <span className="line-number">{idx + 1}</span>
-                <span className="line-content">
-                  {/* Detect and render links as clickable */}
-                  {line.split(/(https?:\/\/[^\s\)]+)/g).map((part, i) => {
-                    if (part.match(/^https?:\/\//)) {
-                      return (
-                        <a
-                          key={i}
-                          href={part}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-link"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {part}
-                        </a>
-                      );
-                    }
-                    return <span key={i}>{part}</span>;
-                  })}
-                </span>
+              <div key={idx} className="code-line code-line-white">
+                <span className="line-number line-number-white">{idx + 1}</span>
+                <span
+                  className="line-content"
+                  dangerouslySetInnerHTML={{ __html: highlightJava(line) }}
+                />
               </div>
             ))}
           </code>
