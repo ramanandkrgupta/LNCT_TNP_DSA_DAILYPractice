@@ -1,0 +1,62 @@
+/* Mobile-specific responsive overrides for profile page */
+@media (max-width: 768px) {
+  .profile-page .profile-container {
+    padding: 0.5rem !important;
+  }
+
+  .profile-page .profile-header {
+    flex-direction: column !important;
+    text-align: center;
+  }
+
+  .profile-page .profile-header-animation {
+    display: none !important;
+  }
+
+  .profile-page .profile-avatar {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .profile-page .profile-title {
+    font-size: 1.5rem !important;
+  }
+
+  .profile-page .profile-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .profile-page .profile-bio {
+    font-size: 0.875rem !important;
+  }
+
+  .profile-page .profile-links-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .profile-page .profile-link-card {
+    padding: 1rem !important;
+  }
+
+  .profile-page .profile-link-title {
+    font-size: 1rem !important;
+  }
+
+  .profile-page .profile-link-username {
+    font-size: 0.8125rem !important;
+  }
+
+  .profile-page .profile-resume-viewer {
+    height: 400px !important;
+  }
+
+  .profile-page .profile-resume-title {
+    font-size: 1.125rem !important;
+  }
+
+  .profile-page .profile-resume-download-btn {
+    font-size: 0.75rem !important;
+    padding: 0.4rem 0.75rem !important;
+  }
+}

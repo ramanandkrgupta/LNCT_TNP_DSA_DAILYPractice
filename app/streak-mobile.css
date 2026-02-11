@@ -1,0 +1,41 @@
+/* Mobile-specific responsive overrides for streak page */
+@media (max-width: 768px) {
+  .streak-page .streak-container {
+    padding: 0.5rem !important;
+  }
+
+  .streak-page .streak-header h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .streak-page .streak-header p {
+    font-size: 0.875rem !important;
+  }
+
+  .streak-page .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  .streak-page .stat-card {
+    padding: 1rem !important;
+  }
+
+  .streak-page .stat-value {
+    font-size: 1.5rem !important;
+  }
+
+  .streak-page .stat-label {
+    font-size: 0.75rem !important;
+  }
+
+  /* GitHub Calendar - make it scrollable on mobile */
+  .streak-page .github-calendar-section {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .streak-page .react-activity-calendar {
+    font-size: 0.7rem !important;
+  }
+}

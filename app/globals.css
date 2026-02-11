@@ -27,6 +27,10 @@
 /* Import nav footer animation */
 @import './nav-animation.css';
 
+/* Import mobile-specific styles */
+@import './streak-mobile.css';
+@import './profile-mobile.css';
+
 
 :root {
   --color-primary: #ff6b35;

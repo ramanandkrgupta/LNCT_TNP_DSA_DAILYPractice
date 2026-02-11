@@ -40,26 +40,30 @@ export default function HomeClient({ javaFiles, recentFiles, streak, totalSolved
       .catch(() => console.log('Animation not found'));
   }, []);
 
-  // Handle pin/unpin
-  const handlePinToggle = () => {
-    setIsPinned(!isPinned);
+  // Handle pin/unpin and control autoplay
+  useEffect(() => {
     const autoplay = autoplayRef.current;
 
-    if (!isPinned) {
-      // Pin it - stop autoplay and disable scrolling
-      autoplay.stop();
-      if (carouselApi) {
-        // Disable carousel dragging
-        carouselApi.plugins().scrollSnap?.destroy?.();
-      }
+    // Safety check - ensure autoplay plugin is initialized
+    if (!autoplay) return;
+
+    if (isPinned) {
+      // Stop autoplay completely when pinned
+      if (autoplay.stop) autoplay.stop();
+      if (autoplay.reset) autoplay.reset();
     } else {
-      // Unpin it - resume autoplay and enable scrolling
-      autoplay.play();
-      if (carouselApi) {
-        // Re-enable carousel dragging
-        carouselApi.reInit();
-      }
+      // Resume autoplay when unpinned
+      if (autoplay.reset) autoplay.reset();
+      // Small delay to ensure plugin is ready
+      setTimeout(() => {
+        if (autoplay.play) autoplay.play();
+      }, 100);
     }
+  }, [isPinned]);
+
+  // Handle pin/unpin toggle
+  const handlePinToggle = () => {
+    setIsPinned(!isPinned);
   };
 
   // Use all files if no recent files
