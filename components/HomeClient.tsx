@@ -25,6 +25,7 @@ export default function HomeClient({ javaFiles, recentFiles, streak, totalSolved
   const [fireAnimation, setFireAnimation] = useState(null);
   const [isPinned, setIsPinned] = useState(false);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const previousPinState = useRef(false);
   const autoplayRef = useRef(
     Autoplay({
       delay: 10000, // 10 seconds
@@ -40,25 +41,36 @@ export default function HomeClient({ javaFiles, recentFiles, streak, totalSolved
       .catch(() => console.log('Animation not found'));
   }, []);
 
-  // Handle pin/unpin and control autoplay
+  // Control autoplay based on pin state
   useEffect(() => {
     const autoplay = autoplayRef.current;
-
-    // Safety check - ensure autoplay plugin is initialized
     if (!autoplay) return;
 
-    if (isPinned) {
-      // Stop autoplay completely when pinned
-      if (autoplay.stop) autoplay.stop();
-      if (autoplay.reset) autoplay.reset();
-    } else {
-      // Resume autoplay when unpinned
-      if (autoplay.reset) autoplay.reset();
-      // Small delay to ensure plugin is ready
-      setTimeout(() => {
-        if (autoplay.play) autoplay.play();
-      }, 100);
+    // Only act on actual state changes, not initial mount
+    const isPinStateChange = previousPinState.current !== isPinned;
+
+    if (isPinned && isPinStateChange) {
+      // Stop autoplay when pinning
+      try {
+        if (typeof autoplay.stop === 'function') {
+          autoplay.stop();
+        }
+      } catch (error) {
+        console.log('Error stopping autoplay:', error);
+      }
+    } else if (!isPinned && isPinStateChange && previousPinState.current === true) {
+      // Only resume autoplay when explicitly unpinning (not on initial mount)
+      try {
+        if (typeof autoplay.play === 'function') {
+          autoplay.play();
+        }
+      } catch (error) {
+        console.log('Error resuming autoplay:', error);
+      }
     }
+
+    // Update previous state
+    previousPinState.current = isPinned;
   }, [isPinned]);
 
   // Handle pin/unpin toggle
