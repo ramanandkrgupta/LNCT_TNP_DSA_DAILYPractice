@@ -6,7 +6,7 @@ export interface JavaFile {
   content: string;
   questionLink: string | null;
   links: string[];
-  dateModified: Date;
+  dateModified: string; // ISO string format for consistent timezone handling
   relativePath: string;
 }
 
@@ -52,7 +52,7 @@ export async function getJavaFiles(): Promise<JavaFile[]> {
           content,
           questionLink,
           links,
-          dateModified: stats.mtime,
+          dateModified: stats.mtime.toISOString(),
           relativePath: path.relative(javaDirectory, fullPath),
         });
       }
@@ -61,8 +61,8 @@ export async function getJavaFiles(): Promise<JavaFile[]> {
 
   scanDirectory(javaDirectory);
 
-  // Sort by date modified (latest first)
-  files.sort((a, b) => b.dateModified.getTime() - a.dateModified.getTime());
+  // Sort by date modified (latest first) - ISO strings can be compared directly
+  files.sort((a, b) => b.dateModified.localeCompare(a.dateModified));
 
   return files;
 }
